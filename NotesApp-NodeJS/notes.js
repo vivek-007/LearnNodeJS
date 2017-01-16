@@ -31,12 +31,15 @@ var addNote = (title, body) => {
 };
 
 var getAll = () => {
-  console.log('Getting all notes');
+  // console.log('Getting all notes');
+  return fetchNotes();
 };
 
 var getNote = (title) => {
   // console.log('Reading note', title);
-
+  var notes = fetchNotes();
+  var fileteredArray = notes.filter((note) => note.title === title);
+  return fileteredArray[0];
 };
 
 var removeNote = (title) => {
@@ -47,12 +50,19 @@ var removeNote = (title) => {
   return notes.length !== new_NotesArr.length;
 };
 
+var logNote = (note) => {
+  console.log('-----------------------------------');
+  console.log(`Title: ${note.title}` + '\n' + `Body: ${note.body}`);
+  console.log('-----------------------------------');
+};
+
 module.exports = {
   addNote, // ES6 notation
   // addNote : addNote ; same as above
   getAll,
   getNote,
-  removeNote
+  removeNote,
+  logNote
 };
 
 // module.exports.addNote = () => {

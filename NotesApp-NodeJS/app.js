@@ -8,7 +8,32 @@ const yargs = require('yargs');
 // user defined modules
 const notes = require('./notes.js');
 
-var argv = yargs.argv;
+const titleOptions = {
+  describe: 'Title of note',
+  demand: true,
+  alias: 't'
+};
+
+const bodyOptions = {
+  describe: 'Body of note',
+  demand: true,
+  alias: 'b'
+};
+
+const argv = yargs
+              .command('add', 'Add a new note', {
+                title: titleOptions,
+                body: bodyOptions
+              })
+              .command('list', 'List all notes')
+              .command('read', 'Read a note', {
+                title: titleOptions
+              })
+              .command('remove', 'Remove a note', {
+                title: titleOptions
+              })
+              .help()
+              .argv;
 var command = argv._[0];
 console.log('Command: ' + command + '\n');
 console.log('Process' + process.argv + '\n');
@@ -21,16 +46,21 @@ if (command === 'add') {
       console.log('Note already exists, please provide a new name');
     } else {
       console.log(note.title, ' is succesfully created');
-      console.log('-----------------------------------');
-      console.log(`Title: ${note.title}` + '\n' + `Body: ${note.body}`);
-      console.log('-----------------------------------');
+      notes.logNote(note);
     }
 } else if (command === 'list') {
     // console.log('Listing all notes');
-    notes.getAll();
+    var allNotes = notes.getAll();
+    console.log(`Printing ${allNotes.length} note(s)`);
+    allNotes.forEach((note) => notes.logNote(note));
 } else if (command === 'read') {
     // console.log('Reading note');
-    notes.getNote(argv.title);
+    var note = notes.getNote(argv.title);
+    if (note) {
+      notes.logNote(note);
+    } else {
+      console.log('Note not found');
+    }
 } else if (command === 'remove') {
     // console.log('Removing note');
     console.log('-----------------------------------');
